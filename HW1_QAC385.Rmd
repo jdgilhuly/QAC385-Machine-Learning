@@ -1,0 +1,74 @@
+---
+title: "HW1_QAC385"
+author: "Daniel Gilhuly"
+date: "9/23/2020"
+output: html_document
+---
+
+```{r, results='hide', echo = T, warning=FALSE, message=FALSE}
+library(MASS)
+library(qacr)
+library(caret)
+data(Boston)
+df <- Boston
+```
+
+(1)
+```{r Training and testing dataset creation}
+set.seed(1234)
+index <- createDataPartition(df$medv,
+                              p = 0.8,
+                              list = FALSE)
+train <- df[index, ]
+test <- df[-index, ]
+```
+
+(2)
+```{r Creating Linear Model of medv}
+model.lm <- lm(medv ~ .,
+                data = train)
+
+summary(model.lm)
+```
+(3) The null hypothesis being tested is that all the independent variables of crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptration, black, and lstat do not affect the median value of owner-occupied homes in $1000s. A F-statistic of 91.73 with a pvalue of <2.2e-16 indicates we reject the null hypothesis meaning that at least one or more of the predictor variables that affect medv.
+
+(4)
+The R-squared of 0.7586 represents that about 75.86% of the the proportion of the variance for median value of owner-occupied homes in $1000s (medv) can be explained by the independent variables (crim, zn, indus, etc.) in the regression model. Therefore, this is a pretty strong model because of how high the r-squared value is.
+
+(5)
+A Residual Standard Error (RSE) of 4.796 means that on average the median value of owner-occupied homes in 1000s deviates from the true regression line on average by about 4.796 or $4,796. 
+
+(6)
+The null hypothesis is that the independent variable does not affect the median value of owner-occupied home (medv). nox has a p-value of .0000417 at a 0.01 significance level, meaning we can be extremely confident (more that 99% sure) that nitrogen oxides concentration (nox) has an effect on medv, holding all other variables constant.
+
+(7) 
+nox on average has a -18.088764 (-$18,088.764) effect on median value of owner-occupied homes, holding all other variables constant.
+
+(8)
+The average number of rooms per dwelling (rm) on average has a 3.969511 (+3,969.511) effect on median value of owner-occupied homes, holding all other variables constant. More rooms means an increase of value on the house at +$3,969.511 per room.
+
+(9)
+```{r, results='hide', echo = T, warning=FALSE, message=FALSE}
+library(relaimpo)
+```
+```{r}
+plot(calc.relimp(model.lm,type = 'lmg'))
+```
+
+lsta, ptra, and rm were the most important variables.
+
+(10)
+
+```{r}
+model.lm2 <- train(medv ~ .,
+                  data = test,
+                  method = "lm",
+                  metric = "RMSE",
+                  trControl = trainControl(method="none"))
+
+summary(model.lm2)
+test$predmedv <- predict(model.lm2, newdata=test)
+postResample(pred=test$predmedv, obs=test$medv)
+```
+RMSE = 4.1149100
+R-squared = 0.7308348
