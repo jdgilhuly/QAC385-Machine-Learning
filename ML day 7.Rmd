@@ -1,0 +1,38 @@
+---
+title: "QAC_HW#1"
+author: "Daniel Gilhuly"
+date: "9/23/2020"
+output: html_document
+---
+Setting up the packages and random seed
+
+```{r setup}
+library(MASS)
+data(Boston)
+```
+
+(1) Creating dataset for training and testing using medv
+```{r Dataset}
+set.seed(1234)
+index <- createDataPartition(Boston$medv,
+                              p = 0.8,
+                              list = FALSE)
+train <- df[index, ]
+test <- df[-index, ]
+
+```
+
+(2)
+```{r Lads}
+
+
+```
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
